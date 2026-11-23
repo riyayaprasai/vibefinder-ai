@@ -1,0 +1,275 @@
+{
+  "request": "sad but really high energy classical",
+  "started_at": "2026-11-23T21:27:24+00:00",
+  "config": {
+    "level": "retrieval",
+    "backend": "offline",
+    "strategy": "default",
+    "artist_penalty": 0.5,
+    "k": 5
+  },
+  "steps": [
+    {
+      "n": 1,
+      "action": "check_input",
+      "input": {},
+      "output": {
+        "ok": true,
+        "reason": ""
+      },
+      "decision": "continue",
+      "elapsed_ms": 0.4
+    },
+    {
+      "n": 2,
+      "action": "parse_request",
+      "input": {
+        "level": "retrieval"
+      },
+      "output": {
+        "parser": "rules",
+        "level": "retrieval",
+        "profile": {
+          "genre": "classical",
+          "mood": "melancholy",
+          "energy": 0.9,
+          "valence": 0.25
+        },
+        "provenance": {
+          "genre": "label:'classical'",
+          "mood": "alias:'sad'",
+          "energy": "cue:'high energy'",
+          "valence": "mood-note:melancholy"
+        },
+        "explicit": [
+          "genre",
+          "mood",
+          "energy"
+        ],
+        "exclude_genres": [],
+        "exclude_moods": [],
+        "hint_genres": [
+          "ambient",
+          "jazz"
+        ],
+        "hint_moods": [
+          "moody"
+        ],
+        "unknown_genres": [],
+        "unknown_moods": [],
+        "activities": [],
+        "retrieved": [
+          [
+            "genre:classical",
+            0.2909
+          ],
+          [
+            "genre:k-pop",
+            0.1903
+          ]
+        ],
+        "k": null
+      },
+      "decision": "",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 3,
+      "action": "decide",
+      "input": {},
+      "output": {
+        "has_signal": true
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 4,
+      "action": "apply_exclusions",
+      "input": {
+        "exclude_genres": [],
+        "exclude_moods": []
+      },
+      "output": {
+        "remaining": 20,
+        "removed": 0
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 5,
+      "action": "check_feasibility",
+      "input": {},
+      "output": {
+        "warnings": [
+          "Conflicting request: No melancholy song has energy near 0.9; the closest is 'Adagio for Rain' at 0.22.",
+          "Conflicting request: No classical song has energy near 0.9; the closest is 'Adagio for Rain' at 0.22."
+        ],
+        "notes": [
+          "Only 1 classical song(s) exist in the catalog, so the other 4 pick(s) come from other genres."
+        ],
+        "conflicts": [
+          [
+            "mood",
+            "energy"
+          ],
+          [
+            "genre",
+            "energy"
+          ]
+        ]
+      },
+      "decision": "conflict found: will also search with a relaxed request",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 6,
+      "action": "retrieve_bonuses",
+      "input": {},
+      "output": {
+        "songs_with_bonus": 6,
+        "hint_genres": [
+          "ambient",
+          "jazz"
+        ],
+        "hint_moods": [
+          "moody"
+        ],
+        "top_text_matches": [
+          {
+            "song_id": 15,
+            "points": 0.75
+          },
+          {
+            "song_id": 13,
+            "points": 0.36
+          },
+          {
+            "song_id": 8,
+            "points": 0.2
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 1.8
+    },
+    {
+      "n": 7,
+      "action": "rank",
+      "input": {
+        "strategy": "default",
+        "k": 5
+      },
+      "output": {
+        "max_possible": 7.25,
+        "top": [
+          {
+            "title": "Adagio for Rain",
+            "score": 5.39,
+            "match_strength": 0.74
+          },
+          {
+            "title": "Night Drive Loop",
+            "score": 3.6,
+            "match_strength": 0.5
+          },
+          {
+            "title": "Iron Reign",
+            "score": 3.36,
+            "match_strength": 0.46
+          },
+          {
+            "title": "Neon Pulse",
+            "score": 3.3,
+            "match_strength": 0.46
+          },
+          {
+            "title": "Storm Cellar",
+            "score": 3.23,
+            "match_strength": 0.45
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 2.1
+    },
+    {
+      "n": 8,
+      "action": "relax_conflict",
+      "input": {
+        "conflict": [
+          "mood",
+          "energy"
+        ],
+        "dropped": "energy"
+      },
+      "output": {
+        "alternative": null
+      },
+      "decision": "relaxed search gave the same top song",
+      "elapsed_ms": 2.3
+    },
+    {
+      "n": 9,
+      "action": "relax_conflict",
+      "input": {
+        "conflict": [
+          "mood",
+          "energy"
+        ],
+        "dropped": "mood"
+      },
+      "output": {
+        "alternative": null
+      },
+      "decision": "relaxed search gave the same top song",
+      "elapsed_ms": 2.6
+    },
+    {
+      "n": 10,
+      "action": "relax_conflict",
+      "input": {
+        "conflict": [
+          "genre",
+          "energy"
+        ],
+        "dropped": "genre"
+      },
+      "output": {
+        "alternative": {
+          "dropped": "genre",
+          "song_id": 8,
+          "title": "Night Drive Loop",
+          "artist": "Neon Echo",
+          "score": 3.6
+        }
+      },
+      "decision": "offer alternative",
+      "elapsed_ms": 2.8
+    },
+    {
+      "n": 11,
+      "action": "generate",
+      "input": {},
+      "output": {
+        "generator": "offline-template",
+        "chars": 2032
+      },
+      "decision": "",
+      "elapsed_ms": 3.0
+    },
+    {
+      "n": 12,
+      "action": "verify_output",
+      "input": {},
+      "output": {
+        "ok": true,
+        "problems": []
+      },
+      "decision": "accept",
+      "elapsed_ms": 3.2
+    }
+  ],
+  "status": "ok"
+}

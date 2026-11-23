@@ -172,3 +172,141 @@ Add genre diversity and a bigger, more balanced catalog. More songs per genre an
 My biggest learning moment during this project was realizing that even a simple recommendation algorithm can produce results that seem intelligent, but that does not necessarily mean the recommendations are always accurate or meaningful. I learned how much small changes in weights and ranking strategies can affect the results. I was also surprised that some recommendations stayed the same even after adjusting the weights. Using AI tools helped me develop the code, understand errors, and create tests more efficiently. However, I learned that I cannot simply trust everything AI generates. I had to run the code, test different scenarios, intentionally break parts of the system, and compare the results to make sure the logic was correct.
 
 What I found most interesting was how a relatively simple system could feel like it understood someone's music taste just by comparing features such as genre, mood, energy, and tempo. At the same time, the unusual results, like an energy-first strategy recommending rock music to a classical listener, showed me the limitations of relying too heavily on individual features. If I were to continue this project, I would try adding user feedback so the system could learn from songs people actually enjoy or skip. I would also explore more advanced machine learning techniques to make recommendations more personalized. Overall, this project gave me a better understanding of how recommendation systems work and taught me that building a useful AI system requires testing, critical thinking, and continuous improvement.
+
+---
+---
+
+# Project 4 update: VibeFinder 2.0
+
+Sections 1–9 above are the Project 3 model card, kept unchanged. The sections below describe
+the Project 4 extension. Every number here comes from `python -m src.evaluate` or
+`python -m pytest`, run on 2026-11-23. Saved copies are in `samples/`.
+
+## 10. What changed
+
+VibeFinder 2.0 accepts natural-language requests. The 1.0 scoring formula is still the core
+(`score_song` was not modified). Around it, Project 4 adds:
+
+- **A second data source.** `data/knowledge/` holds hand-written notes on 18 genres, 13 moods and
+  10 activities. The notes cover aliases, related labels, default targets and descriptions.
+- **A custom TF-IDF index** over the songs and the knowledge notes. Each song is indexed together
+  with the note for its genre and mood.
+- **A parser** that turns text into a profile. It records where every value came from.
+- **A 10-step workflow** (`MusicAgent`) with guardrails, a relaxed search when the request
+  conflicts with the catalog, grounded explanations, and JSON traces.
+- **An optional local LLM (Ollama)** for parsing and explanations. Its output is validated and
+  verified, and the app falls back to offline mode if the output fails.
+
+`recommend_songs` gained one optional argument, `bonus`, which defaults to `None`. A test checks
+that with `bonus=None` the results are identical to Project 3 for all four original profiles.
+
+## 11. Evaluation of the AI layer
+
+There are 16 predefined requests (`data/eval_cases.json`). Three configurations run the same
+agent:
+
+| metric | baseline (exact labels only) | lookup (+ knowledge base) | retrieval (+ index, full system) |
+|---|---|---|---|
+| cases passed | 6/16 | 13/16 | 15/16 |
+| correct status (ok / clarify / rejected) | 0.56 | 0.88 | 1.0 |
+| mean relevance@5 | 0.20 | 0.68 | 0.87 |
+| parse accuracy (6 labeled cases) | 0.44 | 1.0 | 1.0 |
+| conflict / missing-genre warnings | 1/2 | 2/2 | 2/2 |
+| exclusions respected | 1/1 | 1/1 | 1/1 |
+| explanations passing the grounding check | 6/6 | 11/11 | 13/13 |
+
+What each layer did:
+
+- **Knowledge-base lookup** fixed requests that use everyday words instead of catalog labels:
+  "angry", "edm", "party", "k-pop", "synth".
+- **The index** fixed the two requests where no alias matched at all:
+  - "music for a cozy night in with tea and a book" was retrieved as the rainy-day note (cosine
+    0.39).
+  - "music to keep me going on a long run" was retrieved as the workout note (0.195).
+
+**The remaining failure.** The `dinner-date` case scores 0.40 relevance. Only 2 of the 20 songs
+fit its labels, so 0.40 is the best any ranking could do.
+
+**How "relevance" is defined.** It means a song's genre or mood is in a list I wrote for that
+case, and its energy is in the expected range. Because I wrote both the knowledge base and the
+expectations, this benchmark shows that the system behaves the way it was designed to. It does
+not show that listeners would agree with the results.
+
+## 12. Specialization and baseline comparison
+
+- **Measured: the domain-specialized parser against the generic baseline.** On the six requests
+  with labeled parses, the generic parser (exact catalog labels plus generic cues) scored 0.44
+  parse accuracy. The parser specialized with the music knowledge base scored 1.0. That is the
+  same rule engine with and without the domain knowledge.
+- **Implemented but not yet measured: few-shot against zero-shot LLM parsing.**
+  `src/ai/parser.py` has a few-shot prompt with three worked examples and a zero-shot version of
+  the same prompt. `python -m src.evaluate --llm` compares rules, zero-shot and few-shot accuracy
+  on the same labeled cases. Ollama was not installed when this card was written, so that command
+  printed `skipped`. **No few-shot result is claimed here.** Update this section with the real
+  output after running it with Ollama.
+
+## 13. Limitations and risks (2.0)
+
+- Everything in 1.0's section 6 still applies: the catalog is tiny, the songs are simulated, and
+  most genres have only one song.
+- The knowledge base reflects my own judgment about which genres are related and what "studying"
+  sounds like. Those judgments become ranking points, so my bias goes straight into the results.
+- Similarity alone can be fooled. In testing, "tell me a joke" retrieved the country note and
+  "how do I fix my car" retrieved night drive. The fix is a guardrail: retrieval only runs when
+  the request already shows music intent. As a side effect, a vague request with no music words
+  ("something to keep me going on a long run") gets a clarifying question instead of a guess.
+- The injection filter is a short list of patterns. It catches obvious attempts, not determined
+  ones. In offline mode there is no model to inject into. In Ollama mode, the validation and
+  grounding checks are the real protection.
+- Match strength is a ratio of points, not a probability. A 0.97 means the song earned 97% of the
+  points available for this request. It does not mean a 97% chance that you will like it.
+
+## 14. Responsible-AI collaboration reflection
+
+**How AI was used.** I used Claude (Claude Code, with access to my project folder and terminal)
+as an engineering partner for Project 4. It:
+
+- read the Project 3 repository and ran its tests to recover the context (56 tests passed);
+- proposed the design and wrote the code, tests and first drafts of these documents;
+- ran the CLI, tests and evaluation, and reported the actual output.
+
+I reviewed the design, ran the commands in VS Code, and decided what to keep.
+
+**A suggestion I accepted.** Keep Project 3's `score_song` untouched, and add retrieval as
+separate, labeled bonus points through one optional `bonus` argument. That kept all 56 original
+tests passing. Every new point also shows up as a reason ("related genre: jazz (knowledge base)"),
+so the Project 3 rule that "the reasons add up to the score" still holds.
+
+**Suggestions that were revised after testing:**
+
+1. **Retrieval-only guesses.** The first design let retrieval alone decide what a request meant.
+   In a smoke test, "tell me a joke", "best pizza in town" and "how do I fix my car" all came back
+   with song lists. The design was revised so that retrieval only runs when the request shows
+   music intent, and a test now covers this.
+2. **Relaxed search kept stale bonuses.** The first relaxed search kept the related-genre bonus.
+   So for "calm metal", dropping the genre still suggested a loud rock song. This was revised so
+   that dropping a field also drops the partial credit that depends on it. Now the suggestion is
+   Midnight Coding.
+3. **The failing eval case stayed a failure.** The `dinner-date` case could have been made to
+   pass by editing its expected labels. It was left failing and documented instead, because the
+   catalog cannot satisfy it.
+
+**AI-written documentation can be wrong.** While recovering the Project 3 context, Claude
+compared my old `ai_interactions.md` with the actual code. The log says `strategy.py` was renamed
+to `strategies.py` and that 79 tests passed. The repository actually has `src/strategy.py` and 56
+tests. That log was AI-assisted, which is a reminder to check AI-written records against the code.
+
+**My own reflection.**
+> _[Riya: write 4–6 sentences in your own words: what you learned from directing the AI, where you
+> disagreed with it or had to correct it, and what you would not trust it to do unchecked.]_
+
+## 15. Future improvements
+
+- Run `python -m src.evaluate --llm` with Ollama and record the real zero-shot vs few-shot result
+  (section 12).
+- Grow the catalog so that genre and mood coverage stops being the limiting factor. Several
+  failures and warnings are coverage problems.
+- Let listeners give feedback (keep or skip) and adjust the knowledge-base weights from it,
+  instead of relying on hand-set values.
+- Replace the pattern-based injection filter with a structured-output-only LLM call if a hosted
+  model is ever used.

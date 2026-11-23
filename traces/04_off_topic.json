@@ -1,0 +1,60 @@
+{
+  "request": "what's the weather tomorrow?",
+  "started_at": "2026-11-23T21:27:24+00:00",
+  "config": {
+    "level": "retrieval",
+    "backend": "offline",
+    "strategy": "default",
+    "artist_penalty": 0.5,
+    "k": 5
+  },
+  "steps": [
+    {
+      "n": 1,
+      "action": "check_input",
+      "input": {},
+      "output": {
+        "ok": true,
+        "reason": ""
+      },
+      "decision": "continue",
+      "elapsed_ms": 0.4
+    },
+    {
+      "n": 2,
+      "action": "parse_request",
+      "input": {
+        "level": "retrieval"
+      },
+      "output": {
+        "parser": "rules",
+        "level": "retrieval",
+        "profile": {},
+        "provenance": {},
+        "explicit": [],
+        "exclude_genres": [],
+        "exclude_moods": [],
+        "hint_genres": [],
+        "hint_moods": [],
+        "unknown_genres": [],
+        "unknown_moods": [],
+        "activities": [],
+        "retrieved": [],
+        "k": null
+      },
+      "decision": "",
+      "elapsed_ms": 1.5
+    },
+    {
+      "n": 3,
+      "action": "decide",
+      "input": {},
+      "output": {
+        "has_signal": false
+      },
+      "decision": "stop: ask a clarifying question",
+      "elapsed_ms": 1.5
+    }
+  ],
+  "status": "clarify"
+}

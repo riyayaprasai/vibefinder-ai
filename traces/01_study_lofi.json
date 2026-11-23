@@ -1,0 +1,228 @@
+{
+  "request": "chill lofi beats for studying",
+  "started_at": "2026-11-23T21:27:39+00:00",
+  "config": {
+    "level": "retrieval",
+    "backend": "offline",
+    "strategy": "default",
+    "artist_penalty": 0.5,
+    "k": 5
+  },
+  "steps": [
+    {
+      "n": 1,
+      "action": "check_input",
+      "input": {},
+      "output": {
+        "ok": true,
+        "reason": ""
+      },
+      "decision": "continue",
+      "elapsed_ms": 0.3
+    },
+    {
+      "n": 2,
+      "action": "parse_request",
+      "input": {
+        "level": "retrieval"
+      },
+      "output": {
+        "parser": "rules",
+        "level": "retrieval",
+        "profile": {
+          "genre": "lofi",
+          "mood": "chill",
+          "energy": 0.35,
+          "valence": 0.6,
+          "tempo": 78.0,
+          "likes_acoustic": true,
+          "instrumentalness": 0.85,
+          "mood_tags": [
+            "studious",
+            "calm",
+            "steady"
+          ]
+        },
+        "provenance": {
+          "genre": "label:'lofi'",
+          "mood": "label:'chill'",
+          "energy": "mood-note:chill",
+          "valence": "mood-note:chill",
+          "tempo": "activity:studying",
+          "likes_acoustic": "activity:studying",
+          "instrumentalness": "activity:studying",
+          "mood_tags": "activity:studying"
+        },
+        "explicit": [
+          "genre",
+          "mood"
+        ],
+        "exclude_genres": [],
+        "exclude_moods": [],
+        "hint_genres": [
+          "ambient",
+          "jazz",
+          "hip hop",
+          "classical"
+        ],
+        "hint_moods": [
+          "relaxed",
+          "focused"
+        ],
+        "unknown_genres": [],
+        "unknown_moods": [],
+        "activities": [
+          "studying"
+        ],
+        "retrieved": [
+          [
+            "genre:lofi",
+            0.3916
+          ],
+          [
+            "mood:chill",
+            0.2759
+          ]
+        ],
+        "k": null
+      },
+      "decision": "",
+      "elapsed_ms": 1.6
+    },
+    {
+      "n": 3,
+      "action": "decide",
+      "input": {},
+      "output": {
+        "has_signal": true
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.6
+    },
+    {
+      "n": 4,
+      "action": "apply_exclusions",
+      "input": {
+        "exclude_genres": [],
+        "exclude_moods": []
+      },
+      "output": {
+        "remaining": 20,
+        "removed": 0
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.6
+    },
+    {
+      "n": 5,
+      "action": "check_feasibility",
+      "input": {},
+      "output": {
+        "warnings": [],
+        "notes": [
+          "Only 3 lofi song(s) exist in the catalog, so the other 2 pick(s) come from other genres."
+        ],
+        "conflicts": []
+      },
+      "decision": "no conflict",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 6,
+      "action": "retrieve_bonuses",
+      "input": {},
+      "output": {
+        "songs_with_bonus": 8,
+        "hint_genres": [
+          "ambient",
+          "jazz",
+          "hip hop",
+          "classical"
+        ],
+        "hint_moods": [
+          "relaxed",
+          "focused"
+        ],
+        "top_text_matches": [
+          {
+            "song_id": 2,
+            "points": 0.75
+          },
+          {
+            "song_id": 4,
+            "points": 0.73
+          },
+          {
+            "song_id": 9,
+            "points": 0.46
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 7,
+      "action": "rank",
+      "input": {
+        "strategy": "default",
+        "k": 5
+      },
+      "output": {
+        "max_possible": 7.75,
+        "top": [
+          {
+            "title": "Library Rain",
+            "score": 7.51,
+            "match_strength": 0.97
+          },
+          {
+            "title": "Midnight Coding",
+            "score": 7.34,
+            "match_strength": 0.95
+          },
+          {
+            "title": "Focus Flow",
+            "score": 6.19,
+            "match_strength": 0.8
+          },
+          {
+            "title": "Spacewalk Thoughts",
+            "score": 5.83,
+            "match_strength": 0.75
+          },
+          {
+            "title": "Coffee Shop Stories",
+            "score": 4.96,
+            "match_strength": 0.64
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 2.1
+    },
+    {
+      "n": 8,
+      "action": "generate",
+      "input": {},
+      "output": {
+        "generator": "offline-template",
+        "chars": 1780
+      },
+      "decision": "",
+      "elapsed_ms": 2.4
+    },
+    {
+      "n": 9,
+      "action": "verify_output",
+      "input": {},
+      "output": {
+        "ok": true,
+        "problems": []
+      },
+      "decision": "accept",
+      "elapsed_ms": 2.6
+    }
+  ],
+  "status": "ok"
+}

@@ -5,6 +5,12 @@ Usage (run from the project folder):
     python -m src.main --profile pop --mode genre   # one profile, genre-first ranking
     python -m src.main --mode mood --k 3            # mood-first ranking, top 3
     python -m src.main --artist-penalty 0           # turn the diversity penalty off
+
+Project 4 (VibeFinder 2.0) - natural-language requests through the AI workflow:
+    python -m src.main --ask "chill lofi for studying"
+    python -m src.main --ask "sad but high energy classical" --show-trace
+    python -m src.main --ask "party music, no rap" --save-trace traces/party.json
+    python -m src.main --ask "..." --backend ollama  # optional local LLM (see README)
 """
 
 import argparse
@@ -97,8 +103,55 @@ def print_results(profile: dict, results: list, mode: str, artist_penalty: float
     print()
 
 
+def print_agent_result(result, show_trace: bool = False) -> None:
+    """Prints the output of the Project 4 workflow."""
+    print("=" * 80)
+    print(f"  Request: {result.request}")
+    print(f"  Status:  {result.status}")
+    print("=" * 80)
+    if result.status != "ok":
+        print(result.message)
+    else:
+        rows = [[i, r["song"]["title"], r["song"]["artist"], f"{r['song']['genre']} / {r['song']['mood']}",
+                 f"{r['score']:.2f}", f"{r['match_strength']:.2f}"]
+                for i, r in enumerate(result.recommendations, 1)]
+        print(tabulate(rows, headers=["Rank", "Title", "Artist", "Genre / Mood", "Score", "Match"],
+                       tablefmt="simple"))
+        print("\nExplanation (" + result.generator + "):")
+        print(result.explanation)
+        verified = "passed" if result.verification["ok"] else "FAILED: " + "; ".join(result.verification["problems"])
+        print(f"\nGrounding check: {verified}")
+    if show_trace:
+        print("\nAgent trace:")
+        for step in result.trace["steps"]:
+            decision = f"  -> {step['decision']}" if step["decision"] else ""
+            print(f"  {step['n']:>2}. {step['action']:<18}{decision}")
+    print()
+
+
+def run_ask(args) -> None:
+    from src.ai.agent import MusicAgent
+
+    agent = MusicAgent(level=args.level, backend=args.backend, strategy=args.mode,
+                       artist_penalty=args.artist_penalty)
+    if args.backend == "ollama" and not agent.llm.available():
+        print(f"Note: Ollama model '{agent.llm.model}' is not reachable at {agent.llm.host}; "
+              "using the offline parser and generator instead.\n")
+    result = agent.run(args.ask, k=args.k, save_trace=args.save_trace)
+    print_agent_result(result, show_trace=args.show_trace)
+    if args.save_trace:
+        print(f"Trace saved to {args.save_trace}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Music Recommender Simulation")
+    parser.add_argument("--ask", help="natural-language music request (Project 4 AI workflow)")
+    parser.add_argument("--backend", choices=["offline", "ollama"], default="offline",
+                        help="explanation/parsing backend for --ask (default: offline)")
+    parser.add_argument("--level", choices=["baseline", "lookup", "retrieval"], default="retrieval",
+                        help="how much of the knowledge layer --ask uses (default: retrieval)")
+    parser.add_argument("--show-trace", action="store_true", help="print the agent's step trace")
+    parser.add_argument("--save-trace", help="write the agent's JSON trace to this path")
     parser.add_argument("--mode", choices=sorted(STRATEGIES), default="default",
                         help="ranking strategy (default: default)")
     parser.add_argument("--profile", choices=[p["key"] for p in PROFILES] + ["all"], default="all",
@@ -107,6 +160,10 @@ def main() -> None:
     parser.add_argument("--artist-penalty", type=float, default=DEFAULT_ARTIST_PENALTY,
                         help="points taken off per song by an artist already in the list; 0 turns it off")
     args = parser.parse_args()
+
+    if args.ask is not None:
+        run_ask(args)
+        return
 
     songs = load_songs(str(SONGS_CSV))
     print(f"\nLoaded {len(songs)} songs from catalog.\n")

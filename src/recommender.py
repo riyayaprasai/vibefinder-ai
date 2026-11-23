@@ -202,8 +202,14 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
 
 
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5,
-                    strategy=None, artist_penalty: float = 0.0) -> List[Tuple[Dict, float, str]]:
-    """Scores every song, ranks them with a strategy, and returns the top k as (song, score, explanation)."""
+                    strategy=None, artist_penalty: float = 0.0,
+                    bonus: Optional[Dict[int, List[Tuple[float, str]]]] = None) -> List[Tuple[Dict, float, str]]:
+    """Scores every song, ranks them with a strategy, and returns the top k as (song, score, explanation).
+
+    bonus (added in Project 4, optional): {song_id: [(points, reason), ...]} extra points from the
+    retrieval layer. Each one is added to the score and listed as a reason, so the reasons still
+    add up to the score. With bonus=None the behavior is exactly the Project 3 behavior.
+    """
     # Imported here so strategy.py stays free of any dependency on this module.
     from src.strategy import get_strategy
 
@@ -217,6 +223,10 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5,
     base = []
     for song in songs:
         total, reasons = score_song(user_prefs, song)
+        for points, text in (bonus or {}).get(song["id"], []):
+            points = round(points, 2)
+            total = round(total + points, 2)
+            reasons = reasons + [f"{text} (+{points:.2f})"]
         base.append((song, total, reasons))
 
     chosen: List[Tuple[Dict, float, str]] = []

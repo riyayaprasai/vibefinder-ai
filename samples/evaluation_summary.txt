@@ -1,0 +1,33 @@
+VibeFinder 2.0 evaluation: 16 predefined requests, top-5, offline backend
+
+PER-CASE RESULT BY CONFIGURATION
+case              baseline    lookup    retrieval    rel@5 (full)
+----------------  ----------  --------  -----------  --------------
+study-lofi        PASS        PASS      PASS         1.00
+cozy-reading      fail        fail      PASS         1.00
+workout-no-metal  PASS        PASS      PASS         1.00
+long-run          fail        fail      PASS         1.00
+sad-but-loud      PASS        PASS      PASS         -
+dinner-date       fail        fail      fail         0.40
+indie-sunny       fail        PASS      PASS         1.00
+night-drive       fail        PASS      PASS         0.80
+kpop-missing      fail        PASS      PASS         1.00
+party             fail        PASS      PASS         1.00
+angry             fail        PASS      PASS         0.80
+sleep             fail        PASS      PASS         0.60
+edm-festival      fail        PASS      PASS         0.80
+off-topic         PASS        PASS      PASS         -
+injection         PASS        PASS      PASS         -
+empty             PASS        PASS      PASS         -
+
+SUMMARY
+metric                baseline    lookup    retrieval
+--------------------  ----------  --------  -----------
+cases                 16          16        16
+passed                6           13        15
+status_accuracy       0.56        0.88      1.0
+mean_relevance@5      0.2         0.68      0.87
+parse_accuracy        0.44        1.0       1.0
+warnings_correct      1/2         2/2       2/2
+exclusions_respected  1/1         1/1       1/1
+grounding_verified    6/6         11/11     13/13

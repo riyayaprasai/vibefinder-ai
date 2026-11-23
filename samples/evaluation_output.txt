@@ -1,0 +1,93 @@
+VibeFinder 2.0 evaluation: 16 predefined requests, top-5, offline backend
+
+--- baseline
+case              status    result    rel@5    top 3
+----------------  --------  --------  -------  ----------------------------------------------
+study-lofi        ok        PASS      0.80     Midnight Coding, Library Rain, Focus Flow
+cozy-reading      clarify   fail      0.00
+workout-no-metal  ok        PASS      0.80     Storm Cellar, Gym Hero, Neon Pulse
+long-run          clarify   fail      0.00
+sad-but-loud      ok        PASS      -        Adagio for Rain, Storm Cellar, Iron Reign
+dinner-date       clarify   fail      0.00
+indie-sunny       ok        fail      0.20     Rooftop Lights, Storm Cellar, Night Drive Loop
+night-drive       clarify   fail      0.00
+kpop-missing      clarify   fail      0.00
+party             clarify   fail      0.00
+angry             clarify   fail      0.00
+sleep             ok        fail      0.20     Velvet Hours, Library Rain, Midnight Coding
+edm-festival      ok        fail      0.40     Storm Cellar, Iron Reign, Gym Hero
+off-topic         clarify   PASS      -
+injection         rejected  PASS      -
+empty             rejected  PASS      -
+
+--- lookup
+case              status    result    rel@5    top 3
+----------------  --------  --------  -------  -------------------------------------------------
+study-lofi        ok        PASS      1.00     Library Rain, Midnight Coding, Focus Flow
+cozy-reading      clarify   fail      0.00
+workout-no-metal  ok        PASS      1.00     Gym Hero, Storm Runner, Neon Pulse
+long-run          clarify   fail      0.00
+sad-but-loud      ok        PASS      -        Adagio for Rain, Night Drive Loop, Storm Cellar
+dinner-date       ok        fail      0.40     Coffee Shop Stories, Velvet Hours, Desert Caravan
+indie-sunny       ok        PASS      0.80     Rooftop Lights, Night Drive Loop, Confetti Sky
+night-drive       ok        PASS      0.80     Night Drive Loop, Rooftop Lights, Velvet Hours
+kpop-missing      ok        PASS      1.00     Sunrise City, Block Party Anthem, Confetti Sky
+party             ok        PASS      1.00     Block Party Anthem, Calle Sol, Neon Pulse
+angry             ok        PASS      0.80     Iron Reign, Storm Cellar, Gym Hero
+sleep             ok        PASS      0.60     Spacewalk Thoughts, Adagio for Rain, Library Rain
+edm-festival      ok        PASS      0.80     Neon Pulse, Gym Hero, Night Drive Loop
+off-topic         clarify   PASS      -
+injection         rejected  PASS      -
+empty             rejected  PASS      -
+
+--- retrieval
+case              status    result    rel@5    top 3
+----------------  --------  --------  -------  -----------------------------------------------------
+study-lofi        ok        PASS      1.00     Library Rain, Midnight Coding, Focus Flow
+cozy-reading      ok        PASS      1.00     Coffee Shop Stories, Library Rain, Spacewalk Thoughts
+workout-no-metal  ok        PASS      1.00     Neon Pulse, Storm Runner, Gym Hero
+long-run          ok        PASS      1.00     Gym Hero, Storm Runner, Neon Pulse
+sad-but-loud      ok        PASS      -        Adagio for Rain, Night Drive Loop, Iron Reign
+dinner-date       ok        fail      0.40     Coffee Shop Stories, Velvet Hours, Desert Caravan
+indie-sunny       ok        PASS      1.00     Rooftop Lights, Sunrise City, Confetti Sky
+night-drive       ok        PASS      0.80     Night Drive Loop, Velvet Hours, Neon Pulse
+kpop-missing      ok        PASS      1.00     Rooftop Lights, Sunrise City, Confetti Sky
+party             ok        PASS      1.00     Block Party Anthem, Neon Pulse, Calle Sol
+angry             ok        PASS      0.80     Iron Reign, Storm Cellar, Gym Hero
+sleep             ok        PASS      0.60     Spacewalk Thoughts, Library Rain, Midnight Coding
+edm-festival      ok        PASS      0.80     Neon Pulse, Gym Hero, Night Drive Loop
+off-topic         clarify   PASS      -
+injection         rejected  PASS      -
+empty             rejected  PASS      -
+
+PER-CASE RESULT BY CONFIGURATION
+case              baseline    lookup    retrieval    rel@5 (full)
+----------------  ----------  --------  -----------  --------------
+study-lofi        PASS        PASS      PASS         1.00
+cozy-reading      fail        fail      PASS         1.00
+workout-no-metal  PASS        PASS      PASS         1.00
+long-run          fail        fail      PASS         1.00
+sad-but-loud      PASS        PASS      PASS         -
+dinner-date       fail        fail      fail         0.40
+indie-sunny       fail        PASS      PASS         1.00
+night-drive       fail        PASS      PASS         0.80
+kpop-missing      fail        PASS      PASS         1.00
+party             fail        PASS      PASS         1.00
+angry             fail        PASS      PASS         0.80
+sleep             fail        PASS      PASS         0.60
+edm-festival      fail        PASS      PASS         0.80
+off-topic         PASS        PASS      PASS         -
+injection         PASS        PASS      PASS         -
+empty             PASS        PASS      PASS         -
+
+SUMMARY
+metric                baseline    lookup    retrieval
+--------------------  ----------  --------  -----------
+cases                 16          16        16
+passed                6           13        15
+status_accuracy       0.56        0.88      1.0
+mean_relevance@5      0.2         0.68      0.87
+parse_accuracy        0.44        1.0       1.0
+warnings_correct      1/2         2/2       2/2
+exclusions_respected  1/1         1/1       1/1
+grounding_verified    6/6         11/11     13/13

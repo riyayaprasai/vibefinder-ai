@@ -1,0 +1,243 @@
+{
+  "request": "high energy jazz",
+  "started_at": "2026-11-23T21:27:24+00:00",
+  "config": {
+    "level": "retrieval",
+    "backend": "offline",
+    "strategy": "default",
+    "artist_penalty": 0.5,
+    "k": 3
+  },
+  "steps": [
+    {
+      "n": 1,
+      "action": "check_input",
+      "input": {},
+      "output": {
+        "ok": true,
+        "reason": ""
+      },
+      "decision": "continue",
+      "elapsed_ms": 0.4
+    },
+    {
+      "n": 2,
+      "action": "parse_request",
+      "input": {
+        "level": "retrieval"
+      },
+      "output": {
+        "parser": "rules",
+        "level": "retrieval",
+        "profile": {
+          "genre": "jazz",
+          "energy": 0.9
+        },
+        "provenance": {
+          "genre": "label:'jazz'",
+          "energy": "cue:'high energy'"
+        },
+        "explicit": [
+          "genre",
+          "energy"
+        ],
+        "exclude_genres": [],
+        "exclude_moods": [],
+        "hint_genres": [
+          "lofi",
+          "r&b",
+          "classical",
+          "electronic"
+        ],
+        "hint_moods": [],
+        "unknown_genres": [],
+        "unknown_moods": [],
+        "activities": [],
+        "retrieved": [
+          [
+            "genre:jazz",
+            0.3963
+          ],
+          [
+            "genre:k-pop",
+            0.2179
+          ],
+          [
+            "genre:electronic",
+            0.1982
+          ]
+        ],
+        "k": null
+      },
+      "decision": "",
+      "elapsed_ms": 1.5
+    },
+    {
+      "n": 3,
+      "action": "decide",
+      "input": {},
+      "output": {
+        "has_signal": true
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.5
+    },
+    {
+      "n": 4,
+      "action": "apply_exclusions",
+      "input": {
+        "exclude_genres": [],
+        "exclude_moods": []
+      },
+      "output": {
+        "remaining": 20,
+        "removed": 0
+      },
+      "decision": "continue",
+      "elapsed_ms": 1.6
+    },
+    {
+      "n": 5,
+      "action": "check_feasibility",
+      "input": {},
+      "output": {
+        "warnings": [
+          "Conflicting request: No jazz song has energy near 0.9; the closest is 'Coffee Shop Stories' at 0.37."
+        ],
+        "notes": [
+          "Only 1 jazz song(s) exist in the catalog, so the other 2 pick(s) come from other genres."
+        ],
+        "conflicts": [
+          [
+            "genre",
+            "energy"
+          ]
+        ]
+      },
+      "decision": "conflict found: will also search with a relaxed request",
+      "elapsed_ms": 1.6
+    },
+    {
+      "n": 6,
+      "action": "retrieve_bonuses",
+      "input": {},
+      "output": {
+        "songs_with_bonus": 8,
+        "hint_genres": [
+          "lofi",
+          "r&b",
+          "classical",
+          "electronic"
+        ],
+        "hint_moods": [],
+        "top_text_matches": [
+          {
+            "song_id": 7,
+            "points": 0.75
+          },
+          {
+            "song_id": 13,
+            "points": 0.45
+          },
+          {
+            "song_id": 17,
+            "points": 0.22
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 1.7
+    },
+    {
+      "n": 7,
+      "action": "rank",
+      "input": {
+        "strategy": "default",
+        "k": 3
+      },
+      "output": {
+        "max_possible": 6.75,
+        "top": [
+          {
+            "title": "Coffee Shop Stories",
+            "score": 4.8,
+            "match_strength": 0.71
+          },
+          {
+            "title": "Neon Pulse",
+            "score": 4.51,
+            "match_strength": 0.67
+          },
+          {
+            "title": "Velvet Hours",
+            "score": 3.42,
+            "match_strength": 0.51
+          }
+        ]
+      },
+      "decision": "",
+      "elapsed_ms": 1.9
+    },
+    {
+      "n": 8,
+      "action": "relax_conflict",
+      "input": {
+        "conflict": [
+          "genre",
+          "energy"
+        ],
+        "dropped": "energy"
+      },
+      "output": {
+        "alternative": null
+      },
+      "decision": "relaxed search gave the same top song",
+      "elapsed_ms": 2.2
+    },
+    {
+      "n": 9,
+      "action": "relax_conflict",
+      "input": {
+        "conflict": [
+          "genre",
+          "energy"
+        ],
+        "dropped": "genre"
+      },
+      "output": {
+        "alternative": {
+          "dropped": "genre",
+          "song_id": 13,
+          "title": "Neon Pulse",
+          "artist": "Volt Atlas",
+          "score": 3.51
+        }
+      },
+      "decision": "offer alternative",
+      "elapsed_ms": 2.4
+    },
+    {
+      "n": 10,
+      "action": "generate",
+      "input": {},
+      "output": {
+        "generator": "offline-template",
+        "chars": 1236
+      },
+      "decision": "",
+      "elapsed_ms": 2.6
+    },
+    {
+      "n": 11,
+      "action": "verify_output",
+      "input": {},
+      "output": {
+        "ok": true,
+        "problems": []
+      },
+      "decision": "accept",
+      "elapsed_ms": 2.7
+    }
+  ],
+  "status": "ok"
+}

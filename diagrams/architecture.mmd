@@ -1,0 +1,65 @@
+%% VibeFinder 2.0 architecture: components and data flow as implemented in src/
+flowchart TD
+    U["Listener request<br/>python -m src.main --ask '...'"] --> G1
+
+    subgraph DATA["Data sources"]
+        CSV[("data/songs.csv<br/>20 songs, 15 columns")]
+        KB[("data/knowledge/*.md<br/>genres, moods, activities")]
+    end
+
+    subgraph INDEX["Custom index (src/ai/index.py)"]
+        IDX["TF-IDF index<br/>songs enriched with genre/mood notes<br/>+ knowledge documents"]
+    end
+    CSV --> IDX
+    KB --> IDX
+
+    subgraph AGENT["MusicAgent workflow (src/ai/agent.py) - every step written to a JSON trace"]
+        G1{"1. check_input<br/>guardrails.py"}
+        P["2. parse_request<br/>parser.py: labels, aliases,<br/>activity notes, retrieved docs"]
+        D{"3. decide:<br/>any music signal?"}
+        X["4. apply_exclusions<br/>'no metal' etc."]
+        F["5. check_feasibility<br/>conflicts, missing genres,<br/>thin coverage"]
+        B["6. retrieve_bonuses<br/>related genre/mood credit,<br/>text relevance"]
+        R["7. rank<br/>Project 3 recommend_songs"]
+        RX["8. relax_conflict<br/>re-rank without one field"]
+        GEN["9. generate<br/>generator.py"]
+        V{"10. verify_output<br/>grounding check"}
+    end
+
+    subgraph P3["Project 3 engine (unchanged scoring)"]
+        SS["recommender.py<br/>score_song + artist penalty"]
+        ST["strategy.py<br/>default / genre / mood / energy"]
+    end
+
+    G1 -- rejected --> OUT_R["Message: request rejected"]
+    G1 -- ok --> P
+    KB --> P
+    IDX -- knowledge hits --> P
+    P --> D
+    D -- no --> OUT_C["Clarifying question"]
+    D -- yes --> X --> F --> B
+    IDX -- song hits --> B
+    KB --> B
+    B --> R
+    R --> SS
+    SS --> ST
+    ST --> R
+    F -- conflict found --> RX
+    R --> RX
+    RX --> GEN
+    R --> GEN
+    KB -- genre notes as evidence --> GEN
+    GEN -- offline template --> V
+    GEN -. optional .-> LLM["Ollama local LLM<br/>llm.py (free, optional)"]
+    LLM -.-> V
+    V -- LLM text fails --> FB["Fall back to offline template"]
+    FB --> OUT
+    V -- passes --> OUT["Ranked table + explanation<br/>+ warnings + alternatives"]
+    AGENT -.-> TR[("traces/*.json")]
+
+    subgraph EVAL["Evaluation (src/evaluate.py)"]
+        EC[("data/eval_cases.json<br/>16 predefined requests")]
+        EV["Runs MusicAgent at 3 levels:<br/>baseline / lookup / retrieval<br/>prints summary metrics"]
+    end
+    EC --> EV
+    EV --> AGENT

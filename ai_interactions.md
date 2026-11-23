@@ -65,3 +65,79 @@ Concrete Strategy Classes (src/strategies.py): GenreFirstStrategy, MoodFirstStra
 Factory & Dependency Injection (src/strategies.py & src/recommender.py): The get_strategy(name) helper function maps string arguments to strategy instances, and recommendation functions accept the strategy object dynamically. This decouples the core recommender engine from specific sorting rules.
 
 CLI & Experiment Integration (src/main.py & src/experiments.py): Command-line arguments or experiment scripts pass the selected strategy mode into the recommendation pipeline, allowing users to toggle between ranking behaviors seamlessly without modifying the underlying song-loading or data-parsing logic. -->
+
+---
+---
+
+# Project 4: VibeFinder 2.0 AI interactions
+
+## Collaboration summary
+
+- **Tool:** Claude (Claude Code desktop app) with access to the Project 4 folder and terminal.
+- **Task given:** Recover the Project 3 context from the repository, not from the old chat. Then
+  choose and build a Project 4 extension that meets the AI110 rubric, without changing the
+  Project 3 repository or overstating what the AI does.
+- **What Claude did, in order:**
+  1. Cloned Project 3 into a scratch folder and read every source file, the tests and the docs.
+     It ran the test suite: **56 passed**.
+  2. Checked the machine for an LLM runtime and API keys. It found no Ollama and no key, so it
+     made offline mode the default and Ollama optional.
+  3. Created this repository by cloning Project 3 into `vibefinder-ai/` and removing the
+     `origin` remote, so nothing can be pushed to the Project 3 repository by accident.
+  4. Wrote the knowledge base, index, parser, guardrails, generator, agent, evaluation harness and
+     44 new tests. Then it ran the CLI, the tests (**100 passed**) and the evaluation.
+- **What was verified by running code, not just by reading it:** every sample in `samples/`,
+  every trace in `traces/`, and the evaluation numbers in the README and model card.
+- **Not verified:** the Ollama path against a real model. It is covered only by unit tests with a
+  fake LLM.
+
+## Agentic workflow traces (stretch B)
+
+`MusicAgent.run()` writes one JSON trace per request. Each step records `action`, `input`,
+`output`, `decision` and `elapsed_ms`. These saved traces came from real runs (see
+`samples/*.txt` for the matching console output):
+
+| Trace | Request | Decisions it shows |
+|---|---|---|
+| [traces/01_study_lofi.json](traces/01_study_lofi.json) | "chill lofi beats for studying" | Normal path. `parse_request` shows the provenance of each target: label, mood note or activity note. `verify_output` gives `accept`. |
+| [traces/02_conflict_sad_loud.json](traces/02_conflict_sad_loud.json) | "sad but really high energy classical" | `check_feasibility` finds two conflicts (mood+energy, genre+energy). Three `relax_conflict` steps follow: two return the same top song, and dropping the genre offers Night Drive Loop. |
+| [traces/03_missing_genre_kpop.json](traces/03_missing_genre_kpop.json) | "give me some k-pop" | The parser marks k-pop as missing from the catalog. Related genres (pop, electronic, hip hop) come from the knowledge base. |
+| [traces/04_off_topic.json](traces/04_off_topic.json) | "what's the weather tomorrow?" | `decide` gives `stop: ask a clarifying question`. Retrieval was skipped because the request shows no music intent. |
+| [traces/05_conflict_alternative_jazz.json](traces/05_conflict_alternative_jazz.json) | "high energy jazz" | Dropping energy gives the same top song. Dropping the genre gives `offer alternative`, which is Neon Pulse. |
+
+Excerpt from `traces/05_conflict_alternative_jazz.json` (step 9):
+
+```json
+{
+  "n": 9,
+  "action": "relax_conflict",
+  "input": {"conflict": ["genre", "energy"], "dropped": "genre"},
+  "output": {"alternative": {"dropped": "genre", "song_id": 13, "title": "Neon Pulse",
+                             "artist": "Volt Atlas", "score": 3.51}},
+  "decision": "offer alternative"
+}
+```
+
+To regenerate a trace:
+
+```bash
+python -m src.main --ask "high energy jazz" --k 3 --show-trace --save-trace traces/05_conflict_alternative_jazz.json
+```
+
+## Design decisions made with AI, and what was changed
+
+| Proposal | Outcome | Evidence |
+|---|---|---|
+| Keep `score_song` unchanged and add an optional `bonus` to `recommend_songs` | Accepted | `test_bonus_none_keeps_project3_results_identical` |
+| Let retrieval alone decide what a request means | **Revised.** "tell me a joke" returned country songs, so a music-intent guardrail was added | `test_retrieval_needs_music_intent` |
+| Keep partial-credit bonuses during the relaxed search | **Revised.** "calm metal" suggested loud rock, so dependent bonuses are now dropped | `samples/05_conflict_alternative_jazz.txt` |
+| Change the `dinner-date` expectation so the eval passes | **Rejected.** The catalog ceiling is documented instead | model_card.md, section 11 |
+| Call the offline template "RAG" or "an LLM" | **Rejected.** The README uses honest terminology | README, "Honest terminology" |
+
+## Note on the Project 3 log above
+
+Comparing the Project 3 entries with the repository found two statements that don't match the
+code. The log says the strategy file was renamed to `src/strategies.py`, but the code and tests use
+`src/strategy.py`. The log says 79 tests passed, but the suite has 56 (and the Project 3 model card
+also says 56). The Project 3 text above is left as it was submitted. This note records the
+difference.

@@ -1,0 +1,35 @@
+================================================================================
+  Request: high energy jazz
+  Status:  ok
+================================================================================
+  Rank  Title                Artist       Genre / Mood             Score    Match
+------  -------------------  -----------  ---------------------  -------  -------
+     1  Coffee Shop Stories  Slow Stereo  jazz / relaxed            4.8      0.71
+     2  Neon Pulse           Volt Atlas   electronic / euphoric     4.51     0.67
+     3  Velvet Hours         Sable Rue    r&b / romantic            3.42     0.51
+
+Explanation (offline-template):
+Top 3 for "high energy jazz" (understood as: genre=jazz, energy=0.9).
+1. Coffee Shop Stories by Slow Stereo (jazz, relaxed) - match strength 0.71. Strongest reasons: genre match: jazz; text relevance 0.24 (index); energy: song 0.37 vs target 0.9. Genre note: Jazz in this catalog is warm, acoustic and relaxed, with brushed drums, piano and upright bass.
+2. Neon Pulse by Volt Atlas (electronic, euphoric) - match strength 0.67. Strongest reasons: energy: song 0.93 vs target 0.9; related genre: electronic (knowledge base); low acoustic sound (acousticness 0.04). Genre note: Electronic dance music is built from synthesizers and pounding four-on-the-floor beats.
+3. Velvet Hours by Sable Rue (r&b, romantic) - match strength 0.51. Strongest reasons: related genre: r&b (knowledge base); energy: song 0.48 vs target 0.9; valence: song 0.66 vs target 0.5. Genre note: R&B is smooth, warm and intimate, with soulful vocals and a relaxed groove.
+Note: Conflicting request: No jazz song has energy near 0.9; the closest is 'Coffee Shop Stories' at 0.37.
+Note: If you drop the genre requirement, the top pick would be 'Neon Pulse' by Volt Atlas.
+Note: Only 1 jazz song(s) exist in the catalog, so the other 2 pick(s) come from other genres.
+
+Grounding check: passed
+
+Agent trace:
+   1. check_input         -> continue
+   2. parse_request     
+   3. decide              -> continue
+   4. apply_exclusions    -> continue
+   5. check_feasibility   -> conflict found: will also search with a relaxed request
+   6. retrieve_bonuses  
+   7. rank              
+   8. relax_conflict      -> relaxed search gave the same top song
+   9. relax_conflict      -> offer alternative
+  10. generate          
+  11. verify_output       -> accept
+
+Trace saved to traces/05_conflict_alternative_jazz.json

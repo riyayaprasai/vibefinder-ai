@@ -1,0 +1,12 @@
+================================================================================
+  Request: what's the weather tomorrow?
+  Status:  clarify
+================================================================================
+I couldn't find a genre, mood, activity or sound description in that request. Try something like 'upbeat pop for a workout' or 'calm music for studying'. Genres in the catalog: ambient, classical, country, electronic, hip hop, indie pop, jazz, latin, lofi, metal, pop, r&b, rock, synthwave, world.
+
+Agent trace:
+   1. check_input         -> continue
+   2. parse_request     
+   3. decide              -> stop: ask a clarifying question
+
+Trace saved to traces/04_off_topic.json
