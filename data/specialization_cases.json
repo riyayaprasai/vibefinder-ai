@@ -1,0 +1,23 @@
+{
+  "_about": "Held-out test set for the specialization comparison. Written BEFORE data/exemplars.json, and never used to build it. Each request uses everyday phrasing; 'expect' gives the genre and/or mood a listener most plausibly means. Labels are the developer's judgment, not independent ground truth.",
+  "cases": [
+    {"id": "cry", "request": "tunes that make me want to cry", "expect": {"mood": "melancholy"}},
+    {"id": "headbang", "request": "songs to bang my head to", "expect": {"mood": "aggressive"}},
+    {"id": "candlelit", "request": "music for a candlelit evening with my partner", "expect": {"mood": "romantic"}},
+    {"id": "beach", "request": "songs that feel like a summer beach day", "expect": {"mood": "happy"}},
+    {"id": "stargazing", "request": "spacey floating music for stargazing", "expect": {"genre": "ambient"}},
+    {"id": "homework", "request": "beats to grind homework to", "expect": {"genre": "lofi"}},
+    {"id": "eighties-drive", "request": "music like an 80s night drive soundtrack", "expect": {"genre": "synthwave"}},
+    {"id": "orchestra-heartbreak", "request": "orchestra pieces that feel heartbroken", "expect": {"genre": "classical", "mood": "melancholy"}},
+    {"id": "rap-hype", "request": "rap songs to hype me up", "expect": {"genre": "hip hop"}},
+    {"id": "cowboy", "request": "cowboy songs for a long drive", "expect": {"genre": "country"}},
+    {"id": "spooky", "request": "spooky music for a haunted house", "expect": {"mood": "mysterious"}},
+    {"id": "sax-sunday", "request": "smooth sax music for a lazy sunday", "expect": {"genre": "jazz"}},
+    {"id": "salsa", "request": "salsa music to dance to", "expect": {"genre": "latin"}},
+    {"id": "riffs", "request": "headbanging guitar riffs music", "expect": {"genre": "metal"}},
+    {"id": "main-stage", "request": "music that sounds like a festival main stage", "expect": {"genre": "electronic"}},
+    {"id": "piano-sleep", "request": "gentle piano music for falling asleep", "expect": {"genre": "classical"}},
+    {"id": "feel-good-morning", "request": "feel-good songs for a sunny morning", "expect": {"mood": "happy"}},
+    {"id": "pregame", "request": "songs to get pumped before the big match", "expect": {"mood": "intense"}}
+  ]
+}

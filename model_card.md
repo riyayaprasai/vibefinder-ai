@@ -291,10 +291,7 @@ so the Project 3 rule that "the reasons add up to the score" still holds.
    pass by editing its expected labels. It was left failing and documented instead, because the
    catalog cannot satisfy it.
 
-**AI-written documentation can be wrong.** While recovering the Project 3 context, Claude
-compared my old `ai_interactions.md` with the actual code. The log says `strategy.py` was renamed
-to `strategies.py` and that 79 tests passed. The repository actually has `src/strategy.py` and 56
-tests. That log was AI-assisted, which is a reminder to check AI-written records against the code.
+
 
 **My own reflection.**
 Working on this project taught me that directing an AI is mostly about setting the rules and then checking whether they were followed. Before any code was written, I told Claude not to call the offline mode RAG, not to call a fixed workflow an LLM agent, and not to invent results. That shaped the honest "terminology" section of the README more than anything else. I did not accept the reported 15/16 evaluation result or the 100 passing tests until I ran them myself in VS Code and got the same output. The AI's first designs were not always right: its retrieval step treated "tell me a joke" as a music request and returned country songs, and its relaxed search suggested a loud rock song for "calm metal." Both were only caught because the code was actually run, not because the design looked reasonable. I also found that my own Project 3 log, written with AI help, said 79 tests and a renamed strategies.py, when the repository actually has 56 tests and strategy.py. That showed me AI-written documentation can be confidently wrong. I would not trust an AI to report test results, evaluation numbers or what a project can do without running the code myself and comparing.

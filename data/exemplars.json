@@ -1,0 +1,52 @@
+{
+  "_about": "Few-shot exemplar bank for the 'specialized' parser level. Each exemplar is a short labeled request (2-3 per label). They were written after data/specialization_cases.json and are checked by tests to not duplicate any held-out request (cosine similarity below 0.6). Nothing is trained: the parser finds the nearest exemplars with the TF-IDF index and copies their labels when they are similar enough.",
+  "exemplars": [
+    {"id": "ex-breakup", "text": "music for when I'm crying over a breakup", "mood": "melancholy"},
+    {"id": "ex-tearjerker", "text": "tearjerker songs for a lonely rainy night", "mood": "melancholy"},
+    {"id": "ex-blue", "text": "feeling blue and want gloomy tunes", "mood": "melancholy"},
+
+    {"id": "ex-mosh", "text": "songs to mosh to in the pit", "genre": "metal", "mood": "aggressive"},
+    {"id": "ex-screaming", "text": "screaming vocals and distorted guitar riffs", "genre": "metal", "mood": "aggressive"},
+    {"id": "ex-break-things", "text": "something to smash things to, I'm furious", "mood": "aggressive"},
+
+    {"id": "ex-slow-dance", "text": "slow dance songs for a date with my partner", "mood": "romantic"},
+    {"id": "ex-valentine", "text": "valentine's day songs for my girlfriend or boyfriend", "mood": "romantic"},
+    {"id": "ex-crush", "text": "tracks to play for my crush", "mood": "romantic"},
+
+    {"id": "ex-summer", "text": "bright summer vibes for a pool party", "mood": "happy"},
+    {"id": "ex-smile", "text": "sunshine songs that make me smile", "mood": "happy"},
+
+    {"id": "ex-space", "text": "drifting through outer space ambient textures", "genre": "ambient"},
+    {"id": "ex-night-sky", "text": "soundscapes for looking up at the night sky", "genre": "ambient"},
+
+    {"id": "ex-assignments", "text": "background beats while I do assignments", "genre": "lofi"},
+    {"id": "ex-cram", "text": "lo-fi loops for cramming before a test", "genre": "lofi"},
+
+    {"id": "ex-retro-synth", "text": "retro synth music with neon 1980s vibes", "genre": "synthwave"},
+    {"id": "ex-outrun", "text": "cruising a city at midnight with an old-school synth soundtrack", "genre": "synthwave"},
+
+    {"id": "ex-rodeo", "text": "rodeo and pickup truck songs", "genre": "country"},
+    {"id": "ex-cowgirl", "text": "boots, banjos and small-town storytelling songs", "genre": "country"},
+
+    {"id": "ex-halloween", "text": "eerie music for halloween night", "mood": "mysterious"},
+    {"id": "ex-ghost-story", "text": "creepy atmospheric tracks for telling ghost stories", "mood": "mysterious"},
+
+    {"id": "ex-saxophone", "text": "saxophone and brushed drums like a cozy coffee shop", "genre": "jazz"},
+    {"id": "ex-smoky-bar", "text": "smoky bar music with upright bass and trumpet", "genre": "jazz"},
+
+    {"id": "ex-reggaeton", "text": "reggaeton and bachata for the dance floor", "genre": "latin"},
+    {"id": "ex-tropical", "text": "tropical latin rhythms for a summer fiesta", "genre": "latin"},
+
+    {"id": "ex-rave", "text": "big room drops for a rave", "genre": "electronic"},
+    {"id": "ex-festival", "text": "dj sets with huge bass drops like at a music festival", "genre": "electronic"},
+
+    {"id": "ex-strings", "text": "violin and cello pieces", "genre": "classical"},
+    {"id": "ex-sonata", "text": "piano sonatas for winding down", "genre": "classical"},
+
+    {"id": "ex-pump", "text": "warm-up songs to get fired up before kickoff", "mood": "intense"},
+    {"id": "ex-adrenaline", "text": "adrenaline music for the final lap of a race", "mood": "intense"},
+
+    {"id": "ex-rap-flow", "text": "rap with hard beats and clever bars", "genre": "hip hop"},
+    {"id": "ex-cypher", "text": "freestyle cypher and boom bap", "genre": "hip hop"}
+  ]
+}
